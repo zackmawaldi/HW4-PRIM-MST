@@ -16,6 +16,13 @@ class Graph:
         if type(adjacency_mat) == str:
             self.adj_mat = self._load_adjacency_matrix_from_csv(adjacency_mat)
         elif type(adjacency_mat) == np.ndarray:
+
+            if len(adjacency_mat.shape) != 2:
+                raise ValueError('Adjacency matrix must be 2D array')
+            
+            if adjacency_mat.shape[0] != adjacency_mat.shape[1]:
+                raise ValueError('Adjacency 2D array must be even in both dimentions')
+            
             self.adj_mat = adjacency_mat
         else: 
             raise TypeError('Input must be a valid path or an adjacency matrix')
@@ -28,7 +35,7 @@ class Graph:
 
 
     def size(self):
-        return len(self.adj_mat)
+        return self.adj_mat.shape[0]
 
 
     def get_nodes(self):
@@ -70,6 +77,15 @@ class Graph:
             return self.adj_mat[node1][node2]
         else:
             raise ValueError("Node1 and Node2 should be within the current size of the graph.")
+    
+
+    def edges_count(self):
+        count = 0
+        for i in range(self.size()):
+            for j in range(i + 1, self.size()):
+                if self.adj_mat[i][j] != 0:
+                    count += 1
+        return count
                 
 
     def construct_mst(self):
